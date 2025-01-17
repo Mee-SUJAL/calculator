@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: black;
+        font-family: Arial, sans-serif;
+      }
+
+      .calculator {
+        background-color: #000000;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInLeft 1s linear;
+      }
+      /* Define the animation */
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(25px);
+        }
+      }
+
+      .calculator:hover {
+			transform: translateY(-25px);
+            box-shadow: 0 0 20px rgba(7, 251, 88, 0.3), 
+                        0 0 50px rgba(19, 30, 238, 0.3), 
+                        0 0 40px rgba(255, 182, 193, 0.3);
+        }
+
+      .display {
+        width: 100%;
+        height: 50px;
+        border: 2px solid #888;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        text-align: right;
+        /* padding: 10px; */
+        background-color: #f0f0f0;
+      }
+
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      button {
+        height: 50px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #4b5560;
+      }
+
+      .operator {
+        background-color: #28a745;
+      }
+
+      .operator:hover {
+        background-color: #1e7e34;
+      }
+
+      .equal {
+        background-color: #ffc107;
+        grid-column: span 2;
+      }
+
+      .equal:hover {
+        background-color: #e0a800;
+      }
+
+      .clear {
+        background-color: #dc3545;
+      }
+
+      .clear:hover {
+        background-color: #bd2130;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator">
+      <input type="text" id="display" class="display" disabled />
+      <div class="buttons">
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        n<button class="operator" onclick="chooseOperation('/')">
+        &divide;
+        </button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="chooseOperation('*')">&times;</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="chooseOperation('-')">&minus;</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button class="equal" onclick="compute()">=</button>
+        <button class="operator" onclick="chooseOperation('+')">+</button>
+
+        <button class="clear" onclick="clearDisplay()">C</button>
+      </div>
+    </div>
+
+    <script>
+      let currentOperand = "";
+      let previousOperand = "";
+      let operation = undefined;
+
+      const display = document.getElementById("display");
+
+      function appendNumber(number) {
+        if (number === "." && currentOperand.includes(".")) return;
+        currentOperand = currentOperand.toString() + number.toString();
+        updateDisplay();
+      }
+
+      function chooseOperation(op) {
+        if (currentOperand === "") return;
+        if (previousOperand !== "") {
+          compute();
+        }
+        operation = op;
+        previousOperand = currentOperand;
+        currentOperand = "";
+      }
+
+      function compute() {
+        let computation;
+        const prev = parseFloat(previousOperand);
+        const current = parseFloat(currentOperand);
+        if (isNaN(prev) || isNaN(current)) return;
+        switch (operation) {
+          case "+":
+            computation = prev + current;
+            break;
+          case "-":
+            computation = prev - current;
+            break;
+          case "*":
+            computation = prev * current;
+            break;
+          case "/":
+            computation = prev / current;
+            break;
+          default:
+            return;
+        }
+        currentOperand = computation;
+        operation = undefined;
+        previousOperand = "";
+        updateDisplay();
+      }
+
+      function clearDisplay() {
+        currentOperand = "";
+        previousOperand = "";
+        operation = undefined;
+        updateDisplay();
+      }
+
+      function updateDisplay() {
+        display.value = currentOperand;
+      }
+
+      clearDisplay();
+    </script>
+  </body>
+</html>
